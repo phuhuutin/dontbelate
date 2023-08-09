@@ -22,4 +22,7 @@ public class DBLAddress {
     private String city;
     private String state;
     private String zipCode;
+
+    private double latitude;
+    private double longitude;
 }
