@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
+import org.hibernate.annotations.Cascade;
+
 
 @Getter
 @Setter
@@ -21,8 +23,9 @@ public class DBLUser {
     private String username;
     private String email;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id")
+
     private DBLAddress address;
 
 }
