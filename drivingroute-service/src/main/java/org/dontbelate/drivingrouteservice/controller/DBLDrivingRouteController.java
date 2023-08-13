@@ -33,4 +33,11 @@ public class DBLDrivingRouteController {
 
     }
 
+    @GetMapping("hello")
+    public String hellofromDrivingRouteService(){
+
+        return "Hello from DrivingRouteService";
+
+    }
+
 }
