@@ -1,31 +1,23 @@
 package org.dontbelate.userservice.controller;
 
+import org.dontbelate.userservice.dto.DBLUserDTO;
+import org.dontbelate.userservice.entity.DBLUser;
 import org.dontbelate.userservice.service.DrivingRouteClient;
 import org.dontbelate.userservice.service.LoadDummyData;
+import org.dontbelate.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/userservice")
 public class DBLUserController {
     @Autowired
-    private LoadDummyData loadDummyData;
-    @Autowired
-    private DrivingRouteClient drivingRouteClient;
-    @GetMapping("loaddata")
-    public void loadDummyData(){
-
-            loadDummyData.loadExampleData();
-
+     private UserService userService;
+    @PostMapping
+    public ResponseEntity<DBLUser> saveUser(@RequestBody DBLUserDTO dblUserDTO){
+        DBLUser savedUser = userService.saveUser(dblUserDTO);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
-
-    @GetMapping("testHello")
-    public String testHello(){
-
-        return drivingRouteClient.hellofromDrivingRouteService();
-
-    }
-
 }

@@ -1,10 +1,7 @@
 package org.dontbelate.userservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -19,10 +16,22 @@ public class DBLAddress {
     private Long id;
 
     private String street;
+
     private String city;
+
     private String state;
+
     private String zipCode;
 
     private double latitude;
     private double longitude;
+
+    public DBLAddress(String theStreet, String theCity, String theState, String theZipCode){
+        this.street = theStreet;
+        this.city = theCity;
+        this.state = theState;
+        this.zipCode = theZipCode;
+        this.latitude  = 0;
+        this.longitude = 0;
+    }
 }
