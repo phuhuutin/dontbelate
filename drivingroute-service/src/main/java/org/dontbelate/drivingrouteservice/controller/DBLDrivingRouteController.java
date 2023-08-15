@@ -1,13 +1,15 @@
 package org.dontbelate.drivingrouteservice.controller;
 
+import org.dontbelate.drivingrouteservice.entity.DBLAddress;
 import org.dontbelate.drivingrouteservice.entity.DBLDrivingRoute;
+import org.dontbelate.drivingrouteservice.repository.DBLAddressRepository;
 import org.dontbelate.drivingrouteservice.repository.DBLDrivingRouteRepository;
+import org.dontbelate.drivingrouteservice.service.DrivingRouteService;
 import org.dontbelate.drivingrouteservice.service.LoadDummyData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -15,22 +17,13 @@ import java.util.Optional;
 @RequestMapping("api/routeservice")
 public class DBLDrivingRouteController {
     @Autowired
-    private DBLDrivingRouteRepository dblDrivingRouteRepository;
+    private DrivingRouteService drivingRouteService;
     @Autowired
-    private LoadDummyData loadDummyData;
-
-    @GetMapping("loaddata")
-    public void loadDummyData(){
-
-        loadDummyData.loadExampleData();
-
-    }
-
-    @GetMapping("{id}")
-    public String getById(@PathVariable("id") Long routeId){
-
-        return dblDrivingRouteRepository.findById(routeId).get().getDaysOfWeek().toString();
-
+    private DBLAddressRepository dblAddressRepository;
+    @PostMapping("add")
+    public ResponseEntity<DBLDrivingRoute> saveDBLDrivingRoute(@RequestBody DBLDrivingRoute theRoute){
+        DBLDrivingRoute savedRoute = drivingRouteService.saveADrivingRoute(theRoute);
+        return new ResponseEntity<>(savedRoute, HttpStatus.CREATED);
     }
 
     @GetMapping("hello")
@@ -38,6 +31,13 @@ public class DBLDrivingRouteController {
 
         return "Hello from DrivingRouteService";
 
+    }
+
+    @PostMapping("checkAddress")
+    public DBLAddress checkAddress(@RequestBody DBLAddress theAddress){
+        return dblAddressRepository.findByStreetIgnoreCaseAndCityIgnoreCaseAndStateIgnoreCaseAndZipCodeIgnoreCase(
+                theAddress.getStreet(), theAddress.getCity(), theAddress.getState(), theAddress.getZipCode()
+        );
     }
 
 }

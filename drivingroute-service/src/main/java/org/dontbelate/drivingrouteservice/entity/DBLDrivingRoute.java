@@ -23,10 +23,10 @@ public class DBLDrivingRoute {
     private Long id;
 
     private String routeName;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "start_location_id")
     private DBLAddress startLocation;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "end_location_id")
     private DBLAddress endLocation;
     private int expectedDuration;
