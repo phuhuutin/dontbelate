@@ -1,11 +1,13 @@
 package org.dontbelate.drivingrouteservice.controller;
 
+import org.dontbelate.drivingrouteservice.dto.GoogleDistanceMatrixResponse;
 import org.dontbelate.drivingrouteservice.entity.DBLAddress;
 import org.dontbelate.drivingrouteservice.entity.DBLDrivingRoute;
 import org.dontbelate.drivingrouteservice.repository.DBLAddressRepository;
 import org.dontbelate.drivingrouteservice.repository.DBLDrivingRouteRepository;
 import org.dontbelate.drivingrouteservice.service.DrivingRouteService;
 import org.dontbelate.drivingrouteservice.service.LoadDummyData;
+import org.dontbelate.drivingrouteservice.service.TravelTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ public class DBLDrivingRouteController {
     private DrivingRouteService drivingRouteService;
     @Autowired
     private DBLAddressRepository dblAddressRepository;
+    @Autowired
+    private TravelTimeService travelTimeService;
     @PostMapping("add")
     public ResponseEntity<DBLDrivingRoute> saveDBLDrivingRoute(@RequestBody DBLDrivingRoute theRoute){
         DBLDrivingRoute savedRoute = drivingRouteService.saveADrivingRoute(theRoute);
@@ -39,5 +43,11 @@ public class DBLDrivingRouteController {
                 theAddress.getStreet(), theAddress.getCity(), theAddress.getState(), theAddress.getZipCode()
         );
     }
+    @GetMapping("check/{id}")
+    public GoogleDistanceMatrixResponse checkTrafficOfaRoute(@PathVariable Long id){
+        return travelTimeService.getRouteTime(id).getBody();
+    }
+
+
 
 }

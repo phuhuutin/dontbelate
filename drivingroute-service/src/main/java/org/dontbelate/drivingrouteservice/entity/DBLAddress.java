@@ -25,4 +25,8 @@ public class DBLAddress {
 
     private double latitude;
     private double longitude;
+
+    public String getReadableAddress() {
+        return street + ", " + city + ", " + state + " " + zipCode;
+    }
 }
