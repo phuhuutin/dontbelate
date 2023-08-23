@@ -1,0 +1,27 @@
+version: '3'
+services:
+#  config-service:
+#    image: dontbelate/config-service:0.0.1-SNAPSHOT
+#    container_name: config-service
+#    ports:
+#      - "8071:8071"
+#    networks:
+#      - mynetwork
+  service-registry:
+    image: dontbelate/service-registry:0.0.1-SNAPSHOT
+    container_name: service-registry
+
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_CLOUD_CONFIG_URI: http://config-service:8071
+
+#    depends_on:
+#      - config-service
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
+    external: true
+
+

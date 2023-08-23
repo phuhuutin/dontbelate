@@ -28,4 +28,10 @@ public class DBLUserController {
     public ResponseEntity<DBLDrivingRouteDTO> saveRoute(@RequestBody DBLDrivingRouteDTO theRoute){
         return  drivingRouteClient.saveDrivingRoute(theRoute);
     }
+    @GetMapping("/{userId}")
+    public ResponseEntity<DBLUser> getUserById(@PathVariable Long userId){
+        return userService.getUserById(userId);
+    }
+
+
 }
