@@ -9,6 +9,8 @@ import org.dontbelate.drivingrouteservice.service.DrivingRouteService;
 import org.dontbelate.drivingrouteservice.service.LoadDummyData;
 import org.dontbelate.drivingrouteservice.service.TravelTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/routeservice")
+@RefreshScope
 public class DBLDrivingRouteController {
     @Autowired
     private DrivingRouteService drivingRouteService;
@@ -24,6 +27,14 @@ public class DBLDrivingRouteController {
     private DBLAddressRepository dblAddressRepository;
     @Autowired
     private TravelTimeService travelTimeService;
+
+    @Value("${dontbelate.refreshCheck}")
+    private String reFresshConfigurationCheck;
+    @GetMapping("refreshCheck")
+    public String refreshCheck(){
+        return this.reFresshConfigurationCheck;
+    }
+
     @PostMapping("add")
     public ResponseEntity<DBLDrivingRoute> saveDBLDrivingRoute(@RequestBody DBLDrivingRoute theRoute){
         DBLDrivingRoute savedRoute = drivingRouteService.saveADrivingRoute(theRoute);
