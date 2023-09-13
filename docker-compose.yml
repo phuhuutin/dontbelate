@@ -1,27 +1,117 @@
 version: '3'
 services:
-#  config-service:
-#    image: dontbelate/config-service:0.0.1-SNAPSHOT
-#    container_name: config-service
-#    ports:
-#      - "8071:8071"
-#    networks:
-#      - mynetwork
-  service-registry:
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # RabbitMQ default port
+      - "15672:15672"  # RabbitMQ management console port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - mynetwork
+  docker_mysql1:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: user_dbl
+
+    ports:
+      - "3307:3306"
+    volumes:
+      - docker_mysql1_data:/var/lib/mysql
+    networks:
+      - mynetwork
+  docker_mysql2:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: drivingroute_dbl
+
+    ports:
+      - "3308:3306"
+    volumes:
+      - docker_mysql2_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  config-service:
+    image: dontbelate/config-service:0.0.1-SNAPSHOT
+    container_name: config-service
+    ports:
+      - "8071:8071"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eurekaserver:8761/eureka/"
+    depends_on:
+      eurekaserver:
+        condition: service_started
+    networks:
+      - mynetwork
+  eurekaserver:
     image: dontbelate/service-registry:0.0.1-SNAPSHOT
-    container_name: service-registry
+    container_name: eurekaserver
 
     ports:
       - "8761:8761"
-    environment:
-      SPRING_CLOUD_CONFIG_URI: http://config-service:8071
-
-#    depends_on:
-#      - config-service
     networks:
       - mynetwork
+  user-service:
+    image: dontbelate/user-service:0.0.1-SNAPSHOT
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      CONFIG-SERVICE: http://config-service:8071/
+      SERVICE_URL_DEFAULT_ZONE: http://eurekaserver:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker_mysql1:3306/user_dbl
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+
+    depends_on:
+      eurekaserver:
+        condition: service_started
+      config-service:
+        condition: service_started
+      docker_mysql1:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    networks:
+      - mynetwork
+  drivingroute-service:
+    image: dontbelate/drivingroute-service:0.0.1-SNAPSHOT
+    container_name: drivingroute-service
+    ports:
+      - "8081:8081"
+    environment:
+      CONFIG-SERVICE: http://config-service:8071/
+      SERVICE_URL_DEFAULT_ZONE: http://eurekaserver:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker_mysql2:3306/drivingroute_dbl
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      eurekaserver:
+        condition: service_started
+      docker_mysql2:
+        condition: service_started
+      config-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    networks:
+      - mynetwork
+
 networks:
   mynetwork:
-    external: true
+volumes:
+  docker_mysql1_data:
+  docker_mysql2_data:
+  rabbitmq_data:
 
 
