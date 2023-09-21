@@ -30,6 +30,9 @@ public class DBLDrivingRouteController {
 
     @Value("${dontbelate.refreshCheck}")
     private String reFresshConfigurationCheck;
+    @Autowired
+    private DBLDrivingRouteRepository dBLDrivingRouteRepository;
+
     @GetMapping("refreshCheck")
     public String refreshCheck(){
         return this.reFresshConfigurationCheck;
@@ -59,6 +62,21 @@ public class DBLDrivingRouteController {
         return travelTimeService.getRouteTime(id).getBody();
     }
 
+    @GetMapping("delete/{id}")
+    public ResponseEntity<String> deletebyID(@PathVariable Long id){
+        try{
+            if(dBLDrivingRouteRepository.existsById(id)){
+                dBLDrivingRouteRepository.deleteById(id);
+                return ResponseEntity.ok("Item deleted successfully.");
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete item.");
+
+        }
+
+    }
 
 
 }

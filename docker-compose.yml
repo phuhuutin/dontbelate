@@ -106,6 +106,27 @@ services:
         condition: service_started
     networks:
       - mynetwork
+  gateway-service:
+    image: dontbelate/gateway-service:0.0.1-SNAPSHOT
+    container_name: gateway-service
+    ports:
+      - "9191:9191"
+    environment:
+      CONFIG-SERVICE: http://config-service:8071/
+      SERVICE_URL_DEFAULT_ZONE: http://eurekaserver:8761/eureka/
+    depends_on:
+      eurekaserver:
+        condition: service_started
+      config-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      drivingroute-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+    networks:
+      mynetwork:
 
 networks:
   mynetwork:
