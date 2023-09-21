@@ -34,4 +34,8 @@ public class DBLAddress {
         this.latitude  = 0;
         this.longitude = 0;
     }
+    @Override
+    public String toString(){
+        return street + ", " + city + ", " + state + " " + zipCode;
+    }
 }
