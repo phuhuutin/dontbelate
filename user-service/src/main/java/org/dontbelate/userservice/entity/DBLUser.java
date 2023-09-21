@@ -27,5 +27,14 @@ public class DBLUser {
     @JoinColumn(name = "address_id")
 
     private DBLAddress address;
+    @Override
+    public String toString(){
+        return "DBLUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address.toString() +
+                '}';
+    }
 
 }
