@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -71,6 +72,21 @@ public class DBLDrivingRouteController {
     public GoogleDistanceMatrixResponse checkTrafficOfaRoute(@PathVariable Long id){
         return travelTimeService.getRouteTime(id).getBody();
     }
+
+
+    @GetMapping("get/{id}")
+    public ResponseEntity<DBLDrivingRoute> getRoute(@PathVariable Long id){
+        Optional<DBLDrivingRoute> routeOP = dBLDrivingRouteRepository.findById(id);
+        if (routeOP.isPresent()) {
+            DBLDrivingRoute route = routeOP.get();
+            return ResponseEntity.ok(route);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
     @GetMapping("delete/{id}")
     public ResponseEntity<String> deletebyID(@PathVariable Long id){
