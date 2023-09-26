@@ -2,7 +2,6 @@ package org.dontbelate.userservice.service;
 
 import lombok.Getter;
 
-import org.dontbelate.userservice.UserServiceApplication;
 import org.dontbelate.userservice.dto.DBLDrivingRouteChangeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import java.util.function.Consumer;
 public class ServiceConfig {
     private static final Logger logger = LoggerFactory.getLogger(ServiceConfig.class);
     @Autowired
-    private RedisDrivingRouteClient redisDrivingRouteClient;
+    private RedisDrivingRouteClientService redisDrivingRouteClient;
 
     @Value("${redis.server}")
     private String redisServer="";
