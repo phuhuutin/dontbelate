@@ -1,6 +1,6 @@
 package org.dontbelate.userservice;
 
-import org.dontbelate.userservice.service.ServiceConfig;
+import org.dontbelate.userservice.service.MessageServiceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserServiceApplication {
     }
 
     @Autowired
-    private ServiceConfig serviceConfig;
+    private MessageServiceConfig serviceConfig;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {

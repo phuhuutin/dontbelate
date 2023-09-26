@@ -49,7 +49,7 @@ public class RedisDrivingRouteClientService {
 
 
         } catch (Exception e){
-            logger.error("Unable to cache invalidatite {} in Redis. Exception {}", id, e);
+            throw new RuntimeException(String.format("Unable to cache invalidate %s in Redis. Exception %s", id, e));
         }
     }
 
@@ -66,7 +66,7 @@ public class RedisDrivingRouteClientService {
         try{
             dblDrivingRouteRedisRepository.save(route);
         } catch (Exception e){
-            logger.error("Unable to cache organization {} in Redis. Exception {}", route.getId(), e);
+            throw new RuntimeException(String.format("Unable to cache  %s in Redis. Exception %s", route.getId(), e));
         }
     }
 }

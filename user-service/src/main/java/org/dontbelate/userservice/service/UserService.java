@@ -1,9 +1,11 @@
 package org.dontbelate.userservice.service;
 
 import lombok.AllArgsConstructor;
+import org.dontbelate.userservice.dto.DBLDrivingRoute;
 import org.dontbelate.userservice.dto.DBLUserDTO;
 import org.dontbelate.userservice.entity.DBLAddress;
 import org.dontbelate.userservice.entity.DBLUser;
+import org.dontbelate.userservice.exception.ResourceNotFoundException;
 import org.dontbelate.userservice.repository.DBLUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +43,9 @@ public class UserService {
         if (optionalUser.isPresent()) {
             return ResponseEntity.ok(optionalUser.get());
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("User", "userId", userId);
         }
     }
+
 
 }
