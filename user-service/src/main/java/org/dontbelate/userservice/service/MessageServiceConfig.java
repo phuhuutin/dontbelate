@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 
 @Configuration
 @Getter
-public class ServiceConfig {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceConfig.class);
+public class MessageServiceConfig {
+    private static final Logger logger = LoggerFactory.getLogger(MessageServiceConfig.class);
     @Autowired
     private RedisDrivingRouteClientService redisDrivingRouteClient;
 
