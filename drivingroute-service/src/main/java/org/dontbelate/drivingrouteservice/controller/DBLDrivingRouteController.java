@@ -36,29 +36,15 @@ public class DBLDrivingRouteController {
     @Autowired
     private TravelTimeService travelTimeService;
 
-
-//    @Value("${dontbelate.refreshCheck}")
-//    private String reFresshConfigurationCheck;
-    @Autowired
-    private DBLDrivingRouteRepository dBLDrivingRouteRepository;
-    @Autowired
-    private  Function<String, String> sayHello;
-
-//    @GetMapping("refreshCheck")
-//    public String refreshCheck(){
-//        return this.reFresshConfigurationCheck;
-//    }
-
     @PostMapping("add")
     public ResponseEntity<DBLDrivingRoute> saveDBLDrivingRoute(@RequestBody DBLDrivingRoute theRoute){
-        DBLDrivingRoute savedRoute = drivingRouteService.saveADrivingRoute(theRoute);
-        return new ResponseEntity<>(savedRoute, HttpStatus.CREATED);
+        return drivingRouteService.saveADrivingRoute(theRoute);
     }
 
-    @GetMapping("hello/{message}")
-    public String hellofromDrivingRouteService(@PathVariable String message){
-        streamBridge.send("helloTopic",message);
-        return message;
+
+    @GetMapping("testException")
+    public void hellofromDrivingRouteService(){
+        throw new RuntimeException("Fail to delete Item or send out message");
 
     }
 
@@ -75,37 +61,14 @@ public class DBLDrivingRouteController {
 
 
     @GetMapping("get/{id}")
-    public ResponseEntity<DBLDrivingRoute> getRoute(@PathVariable Long id){
-        Optional<DBLDrivingRoute> routeOP = dBLDrivingRouteRepository.findById(id);
-        if (routeOP.isPresent()) {
-            DBLDrivingRoute route = routeOP.get();
-            return ResponseEntity.ok(route);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<DBLDrivingRoute> getRoute(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK.value()).body(drivingRouteService.getRoutebyId(id));
     }
-
-
-
 
     @GetMapping("delete/{id}")
     public ResponseEntity<String> deletebyID(@PathVariable Long id){
-        try{
-            if(dBLDrivingRouteRepository.existsById(id)){
 
-                dBLDrivingRouteRepository.deleteById(id);
-                DBLDrivingRouteChangeMessage newMessage = new DBLDrivingRouteChangeMessage(DBLDrivingRoute.class.getTypeName(),
-                        ActionEnum.DELETED.toString(), id);
-                streamBridge.send("helloTopic", MessageBuilder.withPayload(newMessage).build());
-                return ResponseEntity.ok("Item deleted successfully.");
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete item.");
-
-        }
-
+        return ResponseEntity.status(HttpStatus.OK.value()).body(drivingRouteService.deletebyRoutebyId(id));
     }
 
 
