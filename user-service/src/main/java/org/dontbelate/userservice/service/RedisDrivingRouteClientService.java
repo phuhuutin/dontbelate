@@ -10,13 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RedisDrivingRouteClient {
+public class RedisDrivingRouteClientService {
     @Autowired
     private DrivingRouteClient drivingRouteClient;
     @Autowired
     private RouteRedisRepository dblDrivingRouteRedisRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(RedisDrivingRouteClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RedisDrivingRouteClientService.class);
 
     public DBLDrivingRoute getDBLDrivingRoute(Long routeId){
         DBLDrivingRoute routeFromRedis = checkRedisCache(routeId);
@@ -40,8 +40,14 @@ public class RedisDrivingRouteClient {
 
     public void cacheInvalidatingById(Long id){
         try{
-            dblDrivingRouteRedisRepository.deleteById(id);
-            logger.info("Successfully cache-invalidated DrivingRoute Id: {}", id);
+            if(dblDrivingRouteRedisRepository.existsById(id)){
+                dblDrivingRouteRedisRepository.deleteById(id);
+                logger.info("Successfully cache-invalidated DrivingRoute Id: {}", id);
+            } else {
+                logger.info("Nothing need to be done, DrivingRoute Id: {} does not exist in the cache", id);
+            }
+
+
         } catch (Exception e){
             logger.error("Unable to cache invalidatite {} in Redis. Exception {}", id, e);
         }
