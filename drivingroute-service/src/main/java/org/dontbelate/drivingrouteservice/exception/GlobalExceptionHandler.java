@@ -18,11 +18,25 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 exception.getMessage(),
                 webRequest.getDescription(false),
-                "USER_NOT_FOUND"
+                "RESOURCE_NOT_FOUND"
         );
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    public ResponseEntity<ErrorDetails> handleResourceAlreadyExistException(ResourceAlreadyExistException exception,
+                                                                            WebRequest webRequest){
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "RESOURCE_ALREADY_EXISTS"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.ALREADY_REPORTED);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,
