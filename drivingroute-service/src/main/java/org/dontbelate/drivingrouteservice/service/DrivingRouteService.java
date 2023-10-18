@@ -1,5 +1,6 @@
 package org.dontbelate.drivingrouteservice.service;
 
+import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
 import org.dontbelate.drivingrouteservice.entity.ActionEnum;
 import org.dontbelate.drivingrouteservice.entity.DBLAddress;
@@ -32,7 +33,7 @@ public class DrivingRouteService {
     @Autowired
     private DBLAddressRepository dblAddressRepository;
     public ResponseEntity<DBLDrivingRoute> saveADrivingRoute(DBLDrivingRoute theRoute){
-        try{
+//        try{
             DBLAddress inputStartAddress = theRoute.getStartLocation();
 
             DBLAddress checkStartAddress = dblAddressRepository.findByStreetIgnoreCaseAndCityIgnoreCaseAndStateIgnoreCaseAndZipCodeIgnoreCase(
@@ -57,19 +58,19 @@ public class DrivingRouteService {
                 theRoute.setEndLocation(checkEndAddress);
             }
 
-            if(dblDrivingRouteRepository.existsById(theRoute.getId())){
-                DBLDrivingRouteChangeMessage newMessage = new DBLDrivingRouteChangeMessage(DBLDrivingRoute.class.getTypeName(),
-                        ActionEnum.UPDATED.toString(), theRoute.getId());
-                streamBridge.send("DrivingRouteChangeMessageTopic", MessageBuilder.withPayload(newMessage).build());
-                logger.error("Save Message Sent!");
-            }
+//            if(dblDrivingRouteRepository.existsById(theRoute.getId())){
+//                DBLDrivingRouteChangeMessage newMessage = new DBLDrivingRouteChangeMessage(DBLDrivingRoute.class.getTypeName(),
+//                        ActionEnum.UPDATED.toString(), theRoute.getId());
+//                streamBridge.send("DrivingRouteChangeMessageTopic", MessageBuilder.withPayload(newMessage).build());
+//                logger.error("Save Message Sent!");
+//            }
             DBLDrivingRoute route= dblDrivingRouteRepository.save(theRoute);
 
             return ResponseEntity.ok(route);
-        } catch (Exception e){
-            throw  new RuntimeException("Fail to send out message to DrivingRouteChangeMessageTopic");
-
-        }
+//        } catch (Exception e){
+//            throw  new RuntimeException("Fail to send out message to DrivingRouteChangeMessageTopic");
+//
+//        }
 
     }
 
@@ -90,7 +91,9 @@ public class DrivingRouteService {
         }
     }
 
-
+//    @Observed(name = "drivingroute",
+//            contextualName = "getting-drivingroute",
+//            lowCardinalityKeyValues = {"drivingrouteType", "drivingrouteType2"})
     public DBLDrivingRoute getRoutebyId(Long id){
         Optional<DBLDrivingRoute> routeOP = dblDrivingRouteRepository.findById(id);
         if (!routeOP.isPresent()) {
