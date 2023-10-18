@@ -1,12 +1,10 @@
 package org.dontbelate.drivingrouteservice.EmailSender;
 
 import org.dontbelate.drivingrouteservice.dto.DBLUser;
-import org.dontbelate.drivingrouteservice.dto.RouteStatusEmailMessage;
 import org.dontbelate.drivingrouteservice.entity.DBLDrivingRoute;
 import org.dontbelate.drivingrouteservice.exception.ResourceNotFoundException;
 import org.dontbelate.drivingrouteservice.service.UserServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -34,10 +32,10 @@ public class EmailServiceImpl implements EmailService{
             message.setText(
                     String.format(
                             "Hi %s, \n" +
-                                    "You successfully schedule a route named %s in our system \n" +
+                                    "You successfully scheduled a route named %s in our system \n" +
                                     "From: %s \n" +
                                     "To: %s \n" +
-                                    "Start Time: %s \n" +
+                                    "Start Time: %s on %s \n" +
                                     "We will check and send you the traffic status 15 minutes before your start time \n"+
                             "Thank \n" +
                             "Dont Be Late!"
@@ -46,6 +44,7 @@ public class EmailServiceImpl implements EmailService{
                             ,route.getStartLocation().getReadableAddress()
                             ,route.getEndLocation().getReadableAddress()
                             ,route.getStartTime()
+                            ,route.getDaysOfWeek().toString()
                     )
             );
             emailSender.send(message);
@@ -73,18 +72,20 @@ public class EmailServiceImpl implements EmailService{
                                     "To: %s \n" +
                                     "Start Time: %s \n" +
                                     "Status: %s \n"+
-                                    "Duration: %s"+
+                                    "Duration: %s minutes\n"+
                                     "Thank \n" +
                                     "Dont Be Late!"
                             ,theUser.getUsername()
                             ,routeStatusEmailMessage.getRouteName(),
-                            routeStatusEmailMessage.getStartAddress().getReadableAddress(),
-                            routeStatusEmailMessage.getEndAddress().getReadableAddress(),
+                            routeStatusEmailMessage.getStartAddress(),
+                            routeStatusEmailMessage.getEndAddress(),
                             routeStatusEmailMessage.getStartTime(),
+                            routeStatusEmailMessage.getStatus(),
                             routeStatusEmailMessage.getDuration()
 
                     )
             );
+            emailSender.send(message);
         }
 
 
