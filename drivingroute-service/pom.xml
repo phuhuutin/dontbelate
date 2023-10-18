@@ -87,6 +87,46 @@
             <artifactId>spring-cloud-stream</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+<!--        &lt;!&ndash; For Metrics &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.micrometer</groupId>-->
+<!--            <artifactId>micrometer-registry-prometheus</artifactId>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; OpenTelemetry version &ndash;&gt;-->
+<!--        &lt;!&ndash; For Tracing &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.micrometer</groupId>-->
+<!--            <artifactId>micrometer-tracing-bridge-otel</artifactId>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; For Latency Visualization &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.opentelemetry</groupId>-->
+<!--            <artifactId>opentelemetry-exporter-zipkin</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- For pushing logs out -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.loki4j</groupId>-->
+<!--            <artifactId>loki-logback-appender</artifactId>-->
+<!--            <version>1.4.0</version>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
