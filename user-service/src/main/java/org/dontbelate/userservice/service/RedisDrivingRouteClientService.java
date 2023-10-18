@@ -1,5 +1,6 @@
 package org.dontbelate.userservice.service;
 
+import io.micrometer.observation.annotation.Observed;
 import org.dontbelate.userservice.dto.DBLDrivingRoute;
 import org.dontbelate.userservice.repository.RouteRedisRepository;
 import org.slf4j.Logger;
@@ -17,7 +18,9 @@ public class RedisDrivingRouteClientService {
     private RouteRedisRepository dblDrivingRouteRedisRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(RedisDrivingRouteClientService.class);
-
+    @Observed(name = "drivingroute",
+            contextualName = "getting-drivingroute",
+            lowCardinalityKeyValues = {"drivingrouteType", "drivingrouteType2"})
     public DBLDrivingRoute getDBLDrivingRoute(Long routeId){
         DBLDrivingRoute routeFromRedis = checkRedisCache(routeId);
         if (routeFromRedis != null){
