@@ -1,5 +1,6 @@
 package org.dontbelate.userservice.controller;
 
+import io.micrometer.observation.annotation.Observed;
 import org.dontbelate.userservice.dto.DBLDrivingRoute;
 import org.dontbelate.userservice.dto.DBLUserDTO;
 import org.dontbelate.userservice.entity.DBLUser;
@@ -27,6 +28,8 @@ public class DBLUserController {
     private DrivingRouteClient drivingRouteClient;
 
 
+
+
     @PostMapping("addUser")
     public ResponseEntity<DBLUser> saveUser(@RequestBody DBLUserDTO dblUserDTO){
         DBLUser savedUser = userService.saveUser(dblUserDTO);
@@ -41,6 +44,7 @@ public class DBLUserController {
         return userService.getUserById(userId);
     }
 
+    @Observed
 
     @GetMapping("getRoute/{id}")
     public ResponseEntity<DBLDrivingRoute> getRoutebyId(@PathVariable Long id){
