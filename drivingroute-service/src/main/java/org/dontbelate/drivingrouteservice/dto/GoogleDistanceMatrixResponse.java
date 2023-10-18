@@ -1,9 +1,12 @@
 package org.dontbelate.drivingrouteservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.Getter;
+import org.dontbelate.drivingrouteservice.entity.DBLAddress;
 
 import java.util.List;
-
+@Data
 public class GoogleDistanceMatrixResponse {
     @JsonProperty("destination_addresses")
     private List<String> destinationAddresses;
@@ -26,8 +29,13 @@ public class GoogleDistanceMatrixResponse {
                 ", status='" + status + '\'' +
                 '}';
     }
-}
 
+    public int getDuration(){
+       return  this.getRows().get(0).getElements().get(0).getDuration().getValue();
+    }
+}
+@Data
+@Getter
 class Row {
     @JsonProperty("elements")
     private List<Element> elements;
@@ -41,7 +49,8 @@ class Row {
                 '}';
     }
 }
-
+@Data
+@Getter
 class Element {
     @JsonProperty("distance")
     private Distance distance;
@@ -63,7 +72,8 @@ class Element {
                 '}';
     }
 }
-
+@Data
+@Getter
 class Distance {
     @JsonProperty("text")
     private String text;
@@ -80,7 +90,8 @@ class Distance {
                 '}';
     }
 }
-
+@Data
+@Getter
 class Duration {
     @JsonProperty("text")
     private String text;
