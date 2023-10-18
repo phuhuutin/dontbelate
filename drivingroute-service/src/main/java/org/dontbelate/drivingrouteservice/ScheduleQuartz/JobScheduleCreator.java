@@ -11,6 +11,7 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -19,7 +20,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class JobScheduleCreator {
     private static final Logger logger = LoggerFactory.getLogger(JobScheduleCreator.class);
     public JobDetail createJob(Class<? extends QuartzJobBean> jobClass, boolean isDurable,
-                               ApplicationContext context, String jobName, String jobGroup) {
+                               ApplicationContext context, String jobName, String jobGroup, String routeID, LocalTime startTime, int expectedTime) {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
         factoryBean.setJobClass(jobClass);
         factoryBean.setDurability(isDurable);
@@ -27,10 +28,14 @@ public class JobScheduleCreator {
         factoryBean.setName(jobName);
         factoryBean.setGroup(jobGroup);
 
+
         // set job data map
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("routeName", jobName);
         jobDataMap.put("userID", jobGroup);
+        jobDataMap.put("routeID",routeID);
+        jobDataMap.put("startTime",startTime.toString());
+        jobDataMap.put("expectedDuration",expectedTime);
 
         factoryBean.setJobDataMap(jobDataMap);
         factoryBean.afterPropertiesSet();
