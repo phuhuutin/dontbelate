@@ -46,7 +46,7 @@ public class SchedulerJobService {
         if (!scheduler.checkExists(jobDetail.getKey())) {
             jobDetail = jobScheduleCreator.createJob(
                     (Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context,
-                    jobInfo.getRouteName(), jobInfo.getUserID());
+                    jobInfo.getRouteName(), jobInfo.getUserID(), jobInfo.getRouteID().toString(), jobInfo.getStartTime(), jobInfo.getExpectedDuration());
             LocalTime fifteenMinssearly = jobInfo.getStartTime().minusMinutes(15);
 
             Integer[] dayOfWeekArray = jobInfo.getDaysOfWeek().stream()
@@ -77,7 +77,7 @@ public class SchedulerJobService {
         try{
             JobDetail jobDetail = jobScheduleCreator.createJob(
                     (Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context,
-                    jobInfo.getRouteName(), jobInfo.getUserID());
+                    jobInfo.getRouteName(), jobInfo.getUserID(),jobInfo.getRouteID().toString(),jobInfo.getStartTime(),jobInfo.getExpectedDuration());
             LocalTime fifteenMinssearly = jobInfo.getStartTime().minusMinutes(15);
             Integer[] dayOfWeekArray = jobInfo.getDaysOfWeek().stream()
                     .map(e -> e.getValue() + 1)
