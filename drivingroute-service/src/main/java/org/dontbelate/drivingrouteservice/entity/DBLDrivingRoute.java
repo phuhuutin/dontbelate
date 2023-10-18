@@ -39,4 +39,6 @@ public class DBLDrivingRoute {
     @Column(name = "day_of_week", nullable = false)
     private Set<DayOfWeek> daysOfWeek;
     private Long userID;
+
+    private boolean status;
 }
