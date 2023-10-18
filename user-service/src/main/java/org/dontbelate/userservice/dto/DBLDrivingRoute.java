@@ -33,6 +33,8 @@ public class DBLDrivingRoute {
 
     private Set<DayOfWeek> daysOfWeek;
     private Long userID;
+
+    private boolean status;
     @Override
     public String toString() {
         return "DBLDrivingRoute{" +
