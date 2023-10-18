@@ -11,6 +11,8 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 public class RouteJobInfor{
+
+    private Long routeID;
     private String routeName;
     private String userID;
     private Set<DayOfWeek> daysOfWeek;
@@ -19,4 +21,6 @@ public class RouteJobInfor{
 
 //    private String cronExpression;
     private String jobClass;
+
+    private Integer expectedDuration;
 }
