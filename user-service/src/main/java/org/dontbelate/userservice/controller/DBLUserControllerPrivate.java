@@ -4,7 +4,6 @@ import io.micrometer.observation.annotation.Observed;
 import org.dontbelate.userservice.dto.DBLDrivingRoute;
 import org.dontbelate.userservice.dto.DBLUserDTO;
 import org.dontbelate.userservice.entity.DBLUser;
-import org.dontbelate.userservice.repository.RouteRedisRepository;
 import org.dontbelate.userservice.service.DrivingRouteClient;
 import org.dontbelate.userservice.service.RedisDrivingRouteClientService;
 import org.dontbelate.userservice.service.UserService;
@@ -13,11 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("api/userservice")
-public class DBLUserController {
+@RequestMapping("api/userservice/private")
+public class DBLUserControllerPrivate {
 
     @Autowired
     private RedisDrivingRouteClientService redisDrivingRouteClientService;
@@ -50,6 +47,10 @@ public class DBLUserController {
     public ResponseEntity<DBLDrivingRoute> getRoutebyId(@PathVariable Long id){
         return new ResponseEntity<>(redisDrivingRouteClientService.getDBLDrivingRoute(id),HttpStatus.OK );
 
+    }
+    @GetMapping("hello")
+    public String hello() {
+        return "Hello from Spring boot & Keycloak";
     }
 
 }
