@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
 #  rabbitmq:
 #    image: rabbitmq:latest
@@ -127,58 +127,97 @@ services:
 #        condition: service_started
 #    networks:
 #      mynetwork:
-  tempo:
-    image: grafana/tempo
-    extra_hosts: [ 'host.docker.internal:host-gateway' ]
-    command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - ./docker/tempo/tempo-local.yaml:/etc/tempo.yaml:ro
-      - ./tempo-data:/tmp/tempo
-    ports:
-      - "14268"  # jaeger ingest
-      - "9411:9411" # zipkin
+#  tempo:
+#    image: grafana/tempo
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    command: [ "-config.file=/etc/tempo.yaml" ]
+#    volumes:
+#      - ./docker/tempo/tempo-local.yaml:/etc/tempo.yaml:ro
+#      - ./tempo-data:/tmp/tempo
+#    ports:
+#      - "14268"  # jaeger ingest
+#      - "9411:9411" # zipkin
+#
+#  loki:
+#    image: grafana/loki
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+#    ports:
+#      - "3100:3100"                                   # loki needs to be exposed so it receives logs
+#    environment:
+#      - JAEGER_AGENT_HOST=tempo
+#      - JAEGER_ENDPOINT=http://tempo:14268/api/traces # send traces to Tempo
+#      - JAEGER_SAMPLER_TYPE=const
+#      - JAEGER_SAMPLER_PARAM=1
+#
+#  prometheus:
+#    image: prom/prometheus
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    command:
+#      - --enable-feature=exemplar-storage
+#      - --config.file=/etc/prometheus/prometheus.yml
+#    volumes:
+#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#    ports:
+#      - "9090:9090"
+#
+#  grafana:
+#    image: grafana/grafana
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    volumes:
+#      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+#      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+#    environment:
+#      - GF_AUTH_ANONYMOUS_ENABLED=true
+#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+#      - GF_AUTH_DISABLE_LOGIN_FORM=true
+#    ports:
+#      - "3000:3000"
 
-  loki:
-    image: grafana/loki
-    extra_hosts: [ 'host.docker.internal:host-gateway' ]
-    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+  mysql-kc:
+    image: mysql:latest
     ports:
-      - "3100:3100"                                   # loki needs to be exposed so it receives logs
+      - "3305:3306"
     environment:
-      - JAEGER_AGENT_HOST=tempo
-      - JAEGER_ENDPOINT=http://tempo:14268/api/traces # send traces to Tempo
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
-
-  prometheus:
-    image: prom/prometheus
-    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+      # The user, password and database that Keycloak
+      # is going to create and use
+      MYSQL_USER: keycloak_user
+      MYSQL_PASSWORD: keycloak_password
+      MYSQL_DATABASE: keycloak_db
+      # Self-Explanatory
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - docker_mysql_docker:/var/lib/mysql
+    networks:
+      - mynetwork
+  keycloak-w:
+    image: quay.io/keycloak/keycloak:21.1.1
+    ports:
+      - "8081:8080"
     command:
-      - --enable-feature=exemplar-storage
-      - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
-
-  grafana:
-    image: grafana/grafana
-    extra_hosts: [ 'host.docker.internal:host-gateway' ]
-    volumes:
-      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
-      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+        - "start-dev"
     environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-    ports:
-      - "3000:3000"
+      # User and password for the Administration Console
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      DB_VENDOR: mysql
+      DB_ADDR: mysql-kc
+      # Same values as the mysql-kc service
+      DB_USER: keycloak_user
+      DB_PASSWORD: keycloak_password
+      DB_DATABASE: keycloak_db
+      JDBC_PARAMS: "connectTimeout=30000"
+    depends_on:
+      - mysql-kc
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
 volumes:
-  docker_mysql1_data:
-  docker_mysql2_data:
-  rabbitmq_data:
+#  docker_mysql1_data:
+#  docker_mysql2_data:
+  docker_mysql_docker:
+#  rabbitmq_data:
 
 
