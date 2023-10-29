@@ -7,6 +7,8 @@ import org.dontbelate.userservice.entity.DBLUser;
 import org.dontbelate.userservice.service.DrivingRouteClient;
 import org.dontbelate.userservice.service.RedisDrivingRouteClientService;
 import org.dontbelate.userservice.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/userservice/private")
 public class DBLUserControllerPrivate {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DBLUserControllerPrivate.class);
 
     @Autowired
     private RedisDrivingRouteClientService redisDrivingRouteClientService;
@@ -50,7 +53,10 @@ public class DBLUserControllerPrivate {
     }
     @GetMapping("hello")
     public String hello() {
-        return "Hello from Spring boot & Keycloak";
+
+        return drivingRouteClient.hello();
     }
+
+
 
 }
