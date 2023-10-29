@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/routeservice")
+@RequestMapping("api/routeservice/private")
 @RefreshScope
 @RequiredArgsConstructor
 public class DBLDrivingRouteController {
@@ -123,5 +123,8 @@ public class DBLDrivingRouteController {
         return ResponseEntity.status(HttpStatus.OK.value()).body(drivingRouteService.deletebyRoutebyId(id));
     }
 
-
+    @GetMapping("hello")
+    public String hello() {
+        return "Hello from Private Driving Service";
+    }
 }
